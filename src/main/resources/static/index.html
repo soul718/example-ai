@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Azure Custom Vision Demo</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter&display=swap">
+    <style>
+        body {
+          font-family: 'Inter', sans-serif;
+          background-color: #f4f6f8;
+          margin: 0;
+          padding: 40px;
+          text-align: center;
+        }
+
+        h1 {
+          color: #2a4365;
+        }
+
+        .container {
+          background-color: white;
+          max-width: 500px;
+          margin: auto;
+          padding: 30px;
+          border-radius: 12px;
+          box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        input[type="file"] {
+          margin: 20px 0;
+        }
+
+        button {
+          background-color: #3182ce;
+          color: white;
+          border: none;
+          padding: 10px 20px;
+          font-size: 16px;
+          border-radius: 6px;
+          cursor: pointer;
+        }
+
+        button:hover {
+          background-color: #2b6cb0;
+        }
+
+        #result {
+          background-color: #edf2f7;
+          margin-top: 20px;
+          padding: 15px;
+          text-align: left;
+          border-radius: 6px;
+          font-family: monospace;
+          max-height: 300px;
+          overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>🔍 Análisis de Imagen con Azure</h1>
+    <form id="uploadForm" enctype="multipart/form-data">
+        <input type="file" name="file" accept="image/*" required />
+        <br />
+        <button type="submit">Enviar y analizar</button>
+    </form>
+    <div id="result"></div>
+</div>
+
+<script>
+    document.getElementById("uploadForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+      const formData = new FormData(e.target);
+
+      fetch("/api/vision/analyze", {
+        method: "POST",
+        body: formData
+      })
+      .then(response => response.json())
+      .then(data => {
+        document.getElementById("result").innerText = JSON.stringify(data, null, 2);
+      })
+      .catch(error => {
+        document.getElementById("result").innerText = "Error al procesar la imagen.";
+        console.error(error);
+      });
+    });
+</script>
+</body>
+</html>
+
